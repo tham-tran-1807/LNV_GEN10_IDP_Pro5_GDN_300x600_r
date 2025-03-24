@@ -61,25 +61,24 @@
         AdobeAn.compositionLoaded(lib.properties.id);
         fnStartAnimation();
 
-        // ✅ Gán clickTag vào overlay (không ảnh hưởng tới nút Replay)
+        // ✅ Gán clickTag vào overlay
         document.getElementById("clickLayer").addEventListener("click", function() {
             window.open(window.clickTag, "_blank");
         });
 
-        // ✅ Kiểm tra và gán sự kiện cho nút Replay trong CreateJS
-        stage.on("tick", function() {
-            if (exportRoot.btn_replay && !exportRoot.btn_replay._hasEventListener) {
+        // ✅ Đợi 500ms trước khi gán sự kiện cho nút Replay để tránh lỗi
+        setTimeout(function() {
+            if (exportRoot.btn_replay) {
                 exportRoot.btn_replay.cursor = "pointer";
                 exportRoot.btn_replay.mouseEnabled = true;
-                exportRoot.btn_replay._hasEventListener = true;
 
                 exportRoot.btn_replay.addEventListener("click", function(evt) {
-                    evt.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
+                    evt.stopPropagation(); // Ngăn click lan ra ngoài
                     evt.preventDefault();
                     exportRoot.gotoAndPlay(0);
                 });
             }
-        });
+        }, 500);
     }
 </script>
 
@@ -87,7 +86,8 @@
     body { margin: 0; }
     #animation_container { position: relative; width: 300px; height: 600px; }
     #dom_overlay_container { pointer-events: none; position: absolute; width: 300px; height: 600px; top: 0; left: 0; }
-    /* ✅ Thêm lớp overlay để xử lý clickTag */
+    
+    /* ✅ Đặt clickLayer ở vị trí thấp hơn nút Replay */
     #clickLayer {
         position: absolute;
         width: 300px;
@@ -96,7 +96,7 @@
         left: 0;
         background: rgba(0,0,0,0); /* Trong suốt */
         cursor: pointer;
-        z-index: 10;
+        z-index: 1; /* Dưới nút Replay */
     }
 </style>
 
@@ -105,7 +105,7 @@
     <div id="animation_container">
         <canvas id="canvas" width="300" height="600" style="position: absolute;"></canvas>
         <div id="dom_overlay_container"></div>
-        <!-- ✅ Overlay để xử lý clickTag mà không ảnh hưởng Replay -->
+        <!-- ✅ Overlay cho ClickTag -->
         <div id="clickLayer"></div>
     </div>
 </body>
