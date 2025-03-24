@@ -66,17 +66,20 @@
             window.open(window.clickTag, "_blank");
         });
 
-        // ✅ Đợi 500ms trước khi gán sự kiện cho nút Replay để tránh lỗi
+        // ✅ Đợi 500ms trước khi gán sự kiện cho nút Replay để đảm bảo nó đã tồn tại
         setTimeout(function() {
-            if (exportRoot.btn_replay) {
+            if (exportRoot && exportRoot.btn_replay) {
                 exportRoot.btn_replay.cursor = "pointer";
                 exportRoot.btn_replay.mouseEnabled = true;
 
                 exportRoot.btn_replay.addEventListener("click", function(evt) {
                     evt.stopPropagation(); // Ngăn click lan ra ngoài
                     evt.preventDefault();
+                    console.log("Replay Clicked!"); // Debug xem có nhận event không
                     exportRoot.gotoAndPlay(0);
                 });
+            } else {
+                console.error("Nút Replay không tìm thấy!");
             }
         }, 500);
     }
